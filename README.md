@@ -4,10 +4,12 @@
 
 ## 安装
 
-1. 打开 Chrome 的 `chrome://extensions`
-2. 打开右上角“开发者模式”
-3. 点击“加载已解压的扩展程序”
-4. 选择这个目录：`web-font-switcher`
+1. 下载最新版本：[web-font-switcher-v1.0.0.zip](https://github.com/CUinspace233/web-font-switcher/releases/download/v1.0.0/web-font-switcher-v1.0.0.zip)
+2. 解压这个 zip 文件
+3. 打开 Chrome 的 `chrome://extensions`
+4. 打开右上角“开发者模式”
+5. 点击“加载已解压的扩展程序”
+6. 选择解压后的 `web-font-switcher` 目录
 
 ## 使用
 
