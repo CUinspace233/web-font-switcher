@@ -1,4 +1,4 @@
-# Language Font Switcher
+# Web Font Switcher
 
 一个自用 Chrome 插件：根据网页文本语言自动应用不同字体。
 
@@ -7,7 +7,7 @@
 1. 打开 Chrome 的 `chrome://extensions`
 2. 打开右上角“开发者模式”
 3. 点击“加载已解压的扩展程序”
-4. 选择这个目录：`language-font-extension`
+4. 选择这个目录：`web-font-switcher`
 
 ## 使用
 

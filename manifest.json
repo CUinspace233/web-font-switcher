@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Language Font Switcher",
+  "name": "Web Font Switcher",
   "version": "1.0.0",
   "description": "Apply custom fonts to page text based on detected language.",
   "permissions": ["storage", "tabs"],
@@ -15,7 +15,7 @@
     }
   ],
   "action": {
-    "default_title": "Language Font Switcher",
+    "default_title": "Web Font Switcher",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon-16.png",
