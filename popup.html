@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Language Font Switcher</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>语言字体</h1>
+        <label class="switch">
+          <input id="enabled" type="checkbox" />
+          <span>启用</span>
+        </label>
+      </header>
+
+      <form id="font-form">
+        <label data-language-panel="latin">
+          英语
+          <select id="font-latin"></select>
+          <input id="custom-latin" class="custom-font" autocomplete="off" placeholder="输入自定义英文字体名" hidden />
+          <span id="preview-latin" class="preview" lang="en">Latin preview: The quick brown fox 123</span>
+          <span id="availability-latin" class="availability"></span>
+        </label>
+
+        <label>
+          另一种语言
+          <select id="other-language">
+            <option value="zh">中文</option>
+            <option value="ja">日文</option>
+            <option value="ko">韩文</option>
+            <option value="arabic">阿拉伯文</option>
+          </select>
+        </label>
+
+        <label data-language-panel="zh">
+          中文
+          <select id="font-zh"></select>
+          <input id="custom-zh" class="custom-font" autocomplete="off" placeholder="输入自定义中文字体名" hidden />
+          <span id="preview-zh" class="preview" lang="zh-CN">中文字体预览：快速浏览网页内容 123</span>
+          <span id="availability-zh" class="availability"></span>
+        </label>
+        <label data-language-panel="ja" hidden>
+          日文
+          <select id="font-ja"></select>
+          <input id="custom-ja" class="custom-font" autocomplete="off" placeholder="输入自定义日文字体名" hidden />
+          <span id="preview-ja" class="preview" lang="ja">日本語プレビュー：読みやすい文字 123</span>
+          <span id="availability-ja" class="availability"></span>
+        </label>
+        <label data-language-panel="ko" hidden>
+          韩文
+          <select id="font-ko"></select>
+          <input id="custom-ko" class="custom-font" autocomplete="off" placeholder="输入自定义韩文字体名" hidden />
+          <span id="preview-ko" class="preview" lang="ko">한국어 미리보기: 편안한 글꼴 123</span>
+          <span id="availability-ko" class="availability"></span>
+        </label>
+        <label data-language-panel="arabic" hidden>
+          阿拉伯文
+          <select id="font-arabic"></select>
+          <input id="custom-arabic" class="custom-font" autocomplete="off" placeholder="输入自定义阿拉伯文字体名" hidden />
+          <span id="preview-arabic" class="preview" lang="ar" dir="rtl">معاينة الخط العربي 123</span>
+          <span id="availability-arabic" class="availability"></span>
+        </label>
+
+        <div class="buttons">
+          <button type="submit">保存</button>
+          <button id="apply-current" type="button">应用(刷新页面)</button>
+          <button id="reset" type="button">重置</button>
+        </div>
+      </form>
+
+      <p id="status" role="status"></p>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

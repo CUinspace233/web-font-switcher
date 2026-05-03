@@ -1,0 +1,9 @@
+.DS_Store
+
+# Generated icon working files
+icons/icon-preview.png
+icons/icon-source-gpt-image-2.png
+icons/icon-master.png
+
+# Release archives
+*.zip
