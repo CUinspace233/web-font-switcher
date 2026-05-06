@@ -15,6 +15,7 @@ const DEFAULTS = {
 };
 
 const PAGE_DEFAULT_VALUE = "__page_default__";
+const LANGUAGE_KEYS = Object.keys(DEFAULTS.fonts);
 
 const GOOGLE_FONTS = new Set([
   "Almarai",
@@ -124,6 +125,15 @@ function normalizeSettings(raw) {
   };
 }
 
+function shouldApplyLanguage(lang) {
+  const value = settings.fonts[lang];
+  return Boolean(settings.enabled && value && value !== PAGE_DEFAULT_VALUE);
+}
+
+function hasActiveFontOverride() {
+  return LANGUAGE_KEYS.some((lang) => shouldApplyLanguage(lang));
+}
+
 function fontRule(selector, value) {
   if (!value || value === PAGE_DEFAULT_VALUE) return "";
 
@@ -141,7 +151,7 @@ function googleFontsUrl(fonts) {
 
 function applyGoogleFonts() {
   document.getElementById(GOOGLE_FONT_LINK_ID)?.remove();
-  if (!settings.enabled) return;
+  if (!settings.enabled || !hasActiveFontOverride()) return;
 
   const selected = Object.values(settings.fonts).filter((font) => GOOGLE_FONTS.has(font));
   if (!selected.length) return;
@@ -162,7 +172,7 @@ function detectLanguage(text) {
 
 function applyStyle() {
   document.getElementById(STYLE_ID)?.remove();
-  if (!settings.enabled) return;
+  if (!settings.enabled || !hasActiveFontOverride()) return;
 
   const style = document.createElement("style");
   style.id = STYLE_ID;
@@ -220,7 +230,7 @@ function splitTextNode(textNode) {
       fragment.append(document.createTextNode(text.slice(index, start)));
     }
 
-    if (lang) {
+    if (lang && shouldApplyLanguage(lang)) {
       const span = document.createElement("span");
       span.setAttribute(LANG_ATTR, lang);
       span.setAttribute(PROCESSED_ATTR, "true");
@@ -244,7 +254,7 @@ function splitTextNode(textNode) {
 }
 
 function processRoot(root) {
-  if (!settings.enabled || shouldSkipElement(root)) return;
+  if (!settings.enabled || !hasActiveFontOverride() || shouldSkipElement(root)) return;
 
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
     acceptNode(node) {
@@ -261,7 +271,7 @@ function processRoot(root) {
 
 function startObserver() {
   observer?.disconnect();
-  if (!settings.enabled) return;
+  if (!settings.enabled || !hasActiveFontOverride()) return;
 
   observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
@@ -274,10 +284,22 @@ function startObserver() {
   observer.observe(document.documentElement, { childList: true, subtree: true });
 }
 
+function unwrapInactiveProcessedSpans() {
+  const processedSpans = document.querySelectorAll(`span[${PROCESSED_ATTR}][${LANG_ATTR}]`);
+
+  processedSpans.forEach((span) => {
+    const lang = span.getAttribute(LANG_ATTR);
+    if (shouldApplyLanguage(lang)) return;
+
+    span.replaceWith(document.createTextNode(span.textContent || ""));
+  });
+}
+
 async function loadAndApply() {
   settings = normalizeSettings(await chrome.storage.sync.get(DEFAULTS));
   applyGoogleFonts();
   applyStyle();
+  unwrapInactiveProcessedSpans();
   processRoot(document.body);
   startObserver();
 }
@@ -291,6 +313,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
   });
   applyGoogleFonts();
   applyStyle();
+  unwrapInactiveProcessedSpans();
   processRoot(document.body);
   startObserver();
 });

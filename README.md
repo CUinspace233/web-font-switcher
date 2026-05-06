@@ -10,7 +10,7 @@
 
 ### 安装
 
-1. 下载最新版本：[web-font-switcher-v1.0.0.zip](https://github.com/CUinspace233/web-font-switcher/releases/download/v1.0.0/web-font-switcher-v1.0.0.zip)
+1. 下载最新版本：[web-font-switcher-v1.0.1.zip](https://github.com/CUinspace233/web-font-switcher/releases/download/v1.0.1/web-font-switcher-v1.0.1.zip)
 2. 解压这个 zip 文件
 3. 打开 Chrome 的 `chrome://extensions`
 4. 打开右上角“开发者模式”
@@ -49,7 +49,7 @@ This extension was inspired by Claude's recent Chinese font change, which switch
 
 ### Installation
 
-1. Download the latest version: [web-font-switcher-v1.0.0.zip](https://github.com/CUinspace233/web-font-switcher/releases/download/v1.0.0/web-font-switcher-v1.0.0.zip)
+1. Download the latest version: [web-font-switcher-v1.0.1.zip](https://github.com/CUinspace233/web-font-switcher/releases/download/v1.0.1/web-font-switcher-v1.0.1.zip)
 2. Unzip the file
 3. Open `chrome://extensions` in Chrome
 4. Turn on "Developer mode"
