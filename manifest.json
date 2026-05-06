@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Web Font Switcher",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Apply custom fonts to page text based on detected language.",
   "permissions": ["storage", "tabs"],
   "content_security_policy": {

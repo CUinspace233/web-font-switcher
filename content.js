@@ -16,6 +16,27 @@ const DEFAULTS = {
 
 const PAGE_DEFAULT_VALUE = "__page_default__";
 const LANGUAGE_KEYS = Object.keys(DEFAULTS.fonts);
+const PROTECTED_ELEMENT_SELECTOR = [
+  "script",
+  "style",
+  "noscript",
+  "textarea",
+  "input",
+  "select",
+  "option",
+  "code",
+  "pre",
+  "kbd",
+  "samp",
+  "var",
+  "[role='code']",
+  "[contenteditable='true']",
+  `[${PROCESSED_ATTR}]`
+].join(",");
+const MONOSPACE_PATTERN = /\b(?:monospace|ui-monospace|Menlo|Monaco|Consolas|Courier|Mono|Fira Code|Source Code Pro)\b/i;
+const PRESERVED_SPACE_PATTERN = /^(?:pre|pre-wrap|pre-line|break-spaces)$/;
+const CODE_CLASS_PATTERN =
+  /(?:^|[-_\s])(?:code|command|terminal|shell|cli|copyable|font-mono|whitespace-pre|whitespace-nowrap)(?:$|[-_\s])/i;
 
 const GOOGLE_FONTS = new Set([
   "Almarai",
@@ -192,22 +213,25 @@ function applyStyle() {
 function shouldSkipElement(element) {
   if (!element || element.nodeType !== Node.ELEMENT_NODE) return false;
 
-  return Boolean(
-    element.closest(
-      [
-        "script",
-        "style",
-        "noscript",
-        "textarea",
-        "input",
-        "select",
-        "option",
-        "code",
-        "pre",
-        "[contenteditable='true']",
-        `[${PROCESSED_ATTR}]`
-      ].join(",")
-    )
+  return Boolean(element.closest(PROTECTED_ELEMENT_SELECTOR) || hasCodeLikeAncestor(element));
+}
+
+function hasCodeLikeAncestor(element) {
+  for (let current = element; current && current !== document.body; current = current.parentElement) {
+    if (hasCodeLikeStyle(current)) return true;
+  }
+
+  return false;
+}
+
+function hasCodeLikeStyle(element) {
+  if (!element || element === document.body || element === document.documentElement) return false;
+
+  const style = window.getComputedStyle(element);
+  return (
+    CODE_CLASS_PATTERN.test(element.className || "") ||
+    PRESERVED_SPACE_PATTERN.test(style.whiteSpace) ||
+    MONOSPACE_PATTERN.test(style.fontFamily)
   );
 }
 
@@ -284,12 +308,12 @@ function startObserver() {
   observer.observe(document.documentElement, { childList: true, subtree: true });
 }
 
-function unwrapInactiveProcessedSpans() {
+function unwrapProcessedSpans() {
   const processedSpans = document.querySelectorAll(`span[${PROCESSED_ATTR}][${LANG_ATTR}]`);
 
   processedSpans.forEach((span) => {
     const lang = span.getAttribute(LANG_ATTR);
-    if (shouldApplyLanguage(lang)) return;
+    if (shouldApplyLanguage(lang) && !hasCodeLikeAncestor(span.parentElement)) return;
 
     span.replaceWith(document.createTextNode(span.textContent || ""));
   });
@@ -299,7 +323,7 @@ async function loadAndApply() {
   settings = normalizeSettings(await chrome.storage.sync.get(DEFAULTS));
   applyGoogleFonts();
   applyStyle();
-  unwrapInactiveProcessedSpans();
+  unwrapProcessedSpans();
   processRoot(document.body);
   startObserver();
 }
@@ -313,7 +337,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
   });
   applyGoogleFonts();
   applyStyle();
-  unwrapInactiveProcessedSpans();
+  unwrapProcessedSpans();
   processRoot(document.body);
   startObserver();
 });
